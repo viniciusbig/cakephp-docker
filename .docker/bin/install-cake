@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+if [ $@ ]; then
+  composer self-update && composer create-project --prefer-dist cakephp/app $1
+  cd $1
+else
+  composer self-update && composer create-project --prefer-dist cakephp/app .
+fi
+composer require cakephp/cakephp:^3.6
+echo "
+===================== 🚀 Done 🚀 ===================
+
+      Cake 3 Installed successfully!
+
+      🌎 Web server: http://localhost/
+
+===================== 🚀 Done 🚀 ==================="
