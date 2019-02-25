@@ -71,6 +71,13 @@ RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - \
     && npm i -g grunt-cli yarn
 
 
+# Install WP-Cli
+RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
+	&& php wp-cli.phar --info \
+	&& chmod +x wp-cli.phar \
+	&& mv wp-cli.phar /usr/local/bin/wp \
+	&& wp --info
+
 # Install Composer
 # ---------------------------------------------------------------
 # composer parallel install plugin

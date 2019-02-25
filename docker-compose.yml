@@ -1,7 +1,7 @@
 version: '3'
 services:
   apache:
-    image: viniciusbig/cakephp3:firsttry
+    image: viniciusbig/cakephp3:v1
     # build: .
     env_file: .env
     ports:
