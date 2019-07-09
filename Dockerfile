@@ -68,7 +68,7 @@ RUN apt-get update \
 RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - \
   	&& apt-get install -y nodejs build-essential \
     && curl https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | sh \
-    && npm i -g grunt-cli yarn
+    && npm i -g grunt-cli yarn gulp-cli
 
 
 # Install WP-Cli
