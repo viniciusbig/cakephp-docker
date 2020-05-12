@@ -1,0 +1,7 @@
+#!/bin/bash
+
+BASE=$(pwd)
+source $BASE/.env
+
+sudo chmod -R go+rw $BASE
+sudo chmod -R go+rw $PROJECT_ROOT

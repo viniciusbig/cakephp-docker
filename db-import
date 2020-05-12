@@ -1,0 +1,18 @@
+#!/bin/bash
+
+BASE=$(pwd)
+source $BASE/.env
+
+MYSQL_COMMAND="docker exec -i $(docker-compose ps -q db) mysql -u${MYSQL_ROOT_USER} -p${MYSQL_ROOT_PASSWORD}"
+
+# Drop the database and recreate it.
+$MYSQL_COMMAND -e "DROP DATABASE IF EXISTS ${MYSQL_DATABASE_IMPORT}; CREATE DATABASE ${MYSQL_DATABASE_IMPORT};"
+
+# Import the data.
+$MYSQL_COMMAND ${MYSQL_DATABASE_IMPORT} < ${MYSQL_DUMP_FILE}
+
+$MYSQL_COMMAND -e "GRANT ALL PRIVILEGES ON ${MYSQL_DATABASE_IMPORT}.* TO '${MYSQL_USER}'@'%';"
+
+$MYSQL_COMMAND -e "SHOW DATABASES;"
+
+# TODO: add option to import custom init scripts (fix domain for example).
