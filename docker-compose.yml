@@ -1,9 +1,9 @@
-version: '3'
+version: "3"
 
 services:
   apache:
     # You can choose between build the image by yourself or use
-    # the image already builted. Just comment one line and uncomment the other
+    # the image already builded. Just comment one line and uncomment the other
 
     # image: viniciusbig/cakephp3:v1
     build: .
@@ -28,7 +28,7 @@ services:
     image: mariadb
     env_file: .env
     ports:
-     - ${MYSQL_PORT}:3306
+      - ${MYSQL_PORT}:3306
     volumes:
       - ./.database/data:/var/lib/mysql
 
@@ -36,7 +36,7 @@ services:
     image: phpmyadmin/phpmyadmin
     env_file: .env
     ports:
-     - ${PMA_EXPOSED_PORT}:80
+      - ${PMA_EXPOSED_PORT}:80
     links:
       - db
 

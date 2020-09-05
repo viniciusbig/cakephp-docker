@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 if [ $@ ]; then
-  composer self-update && composer create-project --prefer-dist cakephp/app $1
+  composer self-update && composer create-project --prefer-dist cakephp/app:~4.0 $1
   cd $1
 else
-  composer self-update && composer create-project --prefer-dist cakephp/app .
+  composer self-update && composer create-project --prefer-dist cakephp/app:~4.0 .
 fi
 composer require cakephp/cakephp:^3.6
 echo "
 ===================== 🚀 Done 🚀 ===================
 
-      Cake 3 Installed successfully!
+      Cake 4 Installed successfully!
 
       🌎 Web server: http://localhost/
 
