@@ -1,4 +1,4 @@
-FROM php:5.6-apache
+FROM php:7.3-apache
 
 # This image works with php:7.2-apache and php:7.3-apache
 
@@ -49,8 +49,7 @@ RUN docker-php-ext-configure \
 	bcmath \
 	soap \
 	xsl \
-	mysqli \
-	mysql
+	mysqli
 
 
 # Install zip and zip php extension
@@ -62,13 +61,13 @@ RUN apt-get install -y zip libzip-dev \
 
 # Install oAuth
 
-# RUN apt-get update \
-# 	&& apt-get install -y \
-# 	libpcre3 \
-# 	libpcre3-dev \
-# 	# php-pear \
-# 	&& pecl install oauth \
-# 	&& echo "extension=oauth.so" > /usr/local/etc/php/conf.d/docker-php-ext-oauth.ini
+RUN apt-get update \
+	&& apt-get install -y \
+	libpcre3 \
+	libpcre3-dev \
+	# php-pear \
+	&& pecl install oauth \
+	&& echo "extension=oauth.so" > /usr/local/etc/php/conf.d/docker-php-ext-oauth.ini
 
 
 # Install Node, NVM, NPM and Grunt
@@ -77,7 +76,7 @@ RUN apt-get install -y zip libzip-dev \
 # Node Version Manager
 # 	https://github.com/creationix/nvm#installation
 
-RUN curl -sL https://deb.nodesource.com/setup_10.x | bash - \
+RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - \
 	&& apt-get install -y nodejs npm build-essential \
 	# && curl https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | sh \
 	&& curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash \
@@ -122,16 +121,16 @@ ENV PATH="~/.composer/vendor/bin/:${PATH}"
 # ---------------------------------------------------------------
 # Ref.: https://deployer.org/docs/installation
 
-# RUN curl -LO https://deployer.org/deployer.phar
-# RUN mv deployer.phar /usr/local/bin/dep
-# RUN chmod +x /usr/local/bin/dep
+RUN curl -LO https://deployer.org/deployer.phar
+RUN mv deployer.phar /usr/local/bin/dep
+RUN chmod +x /usr/local/bin/dep
 
 
 # Install XDebug
 # ---------------------------------------------------------------
 
-# RUN yes | pecl install xdebug && \
-# 	echo "zend_extension=$(find /usr/local/lib/php/extensions/ -name xdebug.so)" > /usr/local/etc/php/conf.d/xdebug.iniOLD
+RUN yes | pecl install xdebug && \
+	echo "zend_extension=$(find /usr/local/lib/php/extensions/ -name xdebug.so)" > /usr/local/etc/php/conf.d/xdebug.iniOLD
 
 
 # Install Mhsendmail
