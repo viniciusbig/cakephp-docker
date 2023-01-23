@@ -12,7 +12,7 @@ git config --global diff.renamelimit 5000
 sudo chmod -R u+x ./*
 
 # docker-compose build
-docker image pull viniciusbig/cakephp3
+docker image pull viniciusbig/cakephp3:firsttry
 
 # Changes by SO
 # if [ "$(uname)" == "Darwin" ]; then
