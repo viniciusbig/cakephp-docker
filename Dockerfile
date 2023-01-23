@@ -1,6 +1,6 @@
 FROM php:7.3-apache
 
-# This image also works with php:7.2-apache too
+# This image works with php:7.2-apache and php:7.3-apache
 
 # Install System Dependencies
 
@@ -48,7 +48,8 @@ RUN docker-php-ext-configure \
   	gd \
   	bcmath \
   	soap \
-  	xsl
+  	xsl \
+	mysqli
 
 
 # Install zip and zip php extension

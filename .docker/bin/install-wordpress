@@ -1,0 +1,198 @@
+#!/usr/bin/env bash
+
+##
+# WordPress Installation and VirtualHost Creation
+#
+# Description: Installs a WordPress website in the ~/Sites folder, creates a homepage, 
+# cleans up the WP install a bit, deletes the akismet and hello dolly plugins, creates the permalinks, 
+# clones the roots/sage theme framework to the theme folder, deletes all the other WP default themes, 
+# installs/runs npm and bower and runs gulp to create the initial assets, adds a custom gitignore file 
+# to /wp-content, installs the roots/soil plugin, creates a git repo in wp-content, saves the WordPress 
+# credentials to a local file and the password to your clipboard. Then it creates a virtualhost for you. Voila!
+#
+# Author: William Donahoe - @ethicka
+# 
+# Based off of http://www.ltconsulting.co.uk/automated-wordpress-installation-with-bash-wp-cli/
+#
+# Dependencies: wp-cli, virtualhost.sh, apg, git, npm, node, gulp, bower
+# Homebrew installation: brew install virtualhost.sh apg git node gulp bower
+#
+# Command: wp-start [site-name-slug]
+##
+
+##
+# References
+#
+#   https://www.linode.com/docs/websites/cms/install-wordpress-using-wp-cli-on-ubuntu-18-04/
+#   https://deliciousbrains.com/automating-local-wordpress-site-setup-scripts/
+#   https://gist.github.com/viniciusbig/91fde0a1e3dae4118635f787b6953b13
+#
+##
+
+# set variables
+slug=$1 
+DBUSER=''
+DBPASSWORD=''
+WPUSER=''
+ADMIN_EMAIL=''
+
+# Get the name of the folder
+read -e -p "Folder Name: " slug
+
+# Set the site path
+sitepath=/var/www/html/$slug # you could change this to wherever you install your sites
+if [ ! -d "$sitepath" ]; then
+  mkdir $sitepath
+fi
+cd $sitepath
+
+echo "The site path is $sitepath"
+
+# accept user input for the database name
+echo -n "Database Name: "
+read dbname
+
+# accept the name of our website
+echo -n "Site Name: "
+read sitename
+
+# add a simple yes/no confirmation before we proceed
+echo -n "Run Install? [y/n] "
+read run
+
+if [ "$run" == n ] ; then
+exit
+else
+
+# download the WordPress core files
+wp core download
+
+# create the wp-config file with our standard setup
+wp core config --dbname=$dbname --dbuser=$DBUSER --dbpass=$DBPASSWORD --extra-php <<PHP
+define( 'WP_DEBUG', true );
+define( 'DISALLOW_FILE_EDIT', true );
+define( 'WP_DEBUG_LOG', true );
+define( 'WP_DEBUG_DISPLAY', true );
+define( 'WP_MEMORY_LIMIT', '256M' );
+PHP
+
+# generate password using apg
+password=$(apg -n 1 -m 12 -M SNC)
+
+# copy password to clipboard
+echo $password | pbcopy
+
+# create database, and install WordPress
+wp db create
+wp core install --url="http://localhost" --title="$sitename" --admin_user="$WPUSER" --admin_password="$password" --admin_email="$ADMIN_EMAIL"
+
+# discourage search engines
+wp option update blog_public 0
+
+# delete sample page, and create homepage
+wp post delete $(wp post list --post_type=page --posts_per_page=1 --post_status=publish --pagename="sample-page" --field=ID --format=ids)
+wp post create --post_type=page --post_title=Home --post_status=publish --post_author=$(wp user get $WPUSER --field=ID --format=ids)
+
+# delete readme and license
+rm license.txt
+rm readme.html
+
+# set homepage as front page
+wp option update show_on_front 'page'
+
+# set homepage to be the new page
+wp option update page_on_front $(wp post list --post_type=page --post_status=publish --posts_per_page=1 --pagename=home --field=ID --format=ids)
+
+# set pretty urls
+wp rewrite structure '/%postname%/' --hard
+wp rewrite flush --hard
+
+# delete akismet and hello dolly
+wp plugin delete akismet
+wp plugin delete hello
+
+# you could also *install* some plugins here you use all the time, too.
+wp plugin install wordpress-seo --activate
+
+# install roots sage theme and remove .git folder
+# cd $(wp theme path)
+# git clone --depth=1 https://github.com/roots/sage.git $slug
+# rm -rf $slug/.git
+# wp theme activate $slug
+
+# delete other themes
+# wp theme delete twentyfourteen
+# wp theme delete twentyfifteen
+# wp theme delete twentysixteen
+
+# install npm and bower and run gulp
+# cd $(wp theme path)
+# cd $slug
+# echo "Installing Node Modules..."
+# npm install
+# echo "Installing Bower..."
+# bower install
+# echo "Running Gulp..."
+# gulp
+
+# update manifest.json
+# cd $sitepath/wp-content/themes/$slug/assets
+# replace "http://example.dev" "http://$slug" -- manifest.json
+
+# Create a .gitignore and start a git in the wp-content folder
+cd $sitepath/wp-content
+
+# .gitignore
+echo "# Ignore themes except ours
+themes/*
+!themes/$slug/
+# Ignore all plugins
+plugins/*
+!plugins/soil/
+!plugins/soil/*
+# WordPress 
+/index.php
+advanced-cache.php
+backup-db/
+backups/
+blogs.dir/
+cache/
+upgrade/
+uploads/
+wp-cache-config.php
+# Files
+*.log
+.DS_Store
+*.bak
+*.swp
+*.sublime*
+" > .gitignore
+
+# readme.md
+echo "# $sitename" > readme.md
+
+# first git commit
+git init
+git add .
+git commit -m "Initial commit"
+
+# install roots soil plugin and commit
+# cd $sitepath
+# cd wp-content
+# git submodule add -f https://github.com/roots/soil.git plugins/soil
+# wp plugin activate soil
+# git add .
+# git commit -m "Soil plugin"
+
+# site credentials
+echo "WordPress Username: $WPUSER" > site_credentials
+echo "WordPress Password: $password" >> site_credentials
+
+# finalize
+echo ""
+echo "###"
+echo "Installation is complete."
+echo "Username: $WPUSER"
+echo "Password: $password"
+echo "###"
+echo ""

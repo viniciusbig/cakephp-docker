@@ -1,0 +1,11 @@
+#!/bin/bash
+
+BASE=$(pwd)
+source $BASE/.env
+
+MYSQL_COMMAND="docker exec -i $(docker-compose ps -q db) mysqldump -u${MYSQL_ROOT_USER} -p${MYSQL_ROOT_PASSWORD}"
+
+DUMP_NAME=dump-$(date '+%Y-%m-%d-%H%M%S').sql
+
+# Dump.
+$MYSQL_COMMAND --databases $MYSQL_DATABASE_EXPORT > ./dumps/$DUMP_NAME
