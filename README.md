@@ -87,3 +87,4 @@ MIT © 2018 [Vinicius Arantes](https://github.com/viniciusbig/).
 ### WORDPRESS issues
 
 chown -R www-data:www-data /var/www/wordpress
+chown -R www-data:www-data /var/www/html
