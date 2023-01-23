@@ -1,0 +1,8 @@
+#!/bin/bash
+
+BASE=$(pwd)
+source $BASE/.env
+
+# Dump from remote.
+DUMP_NAME=${REMOTE_DB}-$(date '+%Y-%m-%d-%H%M%S').sql.gz
+ssh $REMOTE_SSH "mysqldump -u ${REMOTE_DB_USER} -p${REMOTE_DB_PASS} ${REMOTE_DB} | gzip -9" > ./dumps/$DUMP_NAME

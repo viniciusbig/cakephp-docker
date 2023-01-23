@@ -1,0 +1,7 @@
+#!/bin/bash
+
+BASE=$(pwd)
+source $BASE/.env
+
+# scp -r $REMOTE_SSH:$REMOTE_FILE_PATH $LOCAL_FILE_PATH
+rsync -azP --delete $REMOTE_SSH:$REMOTE_FILE_PATH $LOCAL_FILE_PATH
