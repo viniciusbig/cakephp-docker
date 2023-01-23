@@ -75,12 +75,27 @@ RUN apt-get update \
 # https://nodejs.org/en/download/package-manager/#debian-and-ubuntu-based-linux-distributions
 # Node Version Manager
 # 	https://github.com/creationix/nvm#installation
+# RUN curl -sL https://deb.nodesource.com/setup_18.x | bash - \
+# 	&& apt-get install -y nodejs npm build-essential \
+# 	&& curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash \
+# 	&& npm i -g grunt-cli yarn gulp-cli
 
-RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - \
-	&& apt-get install -y nodejs npm build-essential \
-	# && curl https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | sh \
-	&& curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash \
-	&& npm i -g grunt-cli yarn gulp-cli
+
+# Install Volta and Node
+
+# since we're starting non-interactive shell, 
+# we wil need to tell bash to load .bashrc manually
+ENV BASH_ENV ~/.bashrc
+# needed by volta() function
+ENV VOLTA_HOME /root/.volta
+# make sure packages managed by volta will be in PATH
+ENV PATH $VOLTA_HOME/bin:$PATH
+
+# install volta
+RUN curl https://get.volta.sh | bash
+
+# install node LTS
+RUN volta install node
 
 
 # Install WP-Cli
@@ -128,8 +143,8 @@ RUN chmod +x /usr/local/bin/dep
 # Install XDebug
 # ---------------------------------------------------------------
 
-RUN yes | pecl install xdebug && \
-	echo "zend_extension=$(find /usr/local/lib/php/extensions/ -name xdebug.so)" > /usr/local/etc/php/conf.d/xdebug.iniOLD
+# RUN yes | pecl install xdebug && \
+# 	echo "zend_extension=$(find /usr/local/lib/php/extensions/ -name xdebug.so)" > /usr/local/etc/php/conf.d/xdebug.iniOLD
 
 
 # Install Mhsendmail
