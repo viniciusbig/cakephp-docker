@@ -1,3 +1,4 @@
 \.database/
 \.env
 dumps
+.DS_Store
