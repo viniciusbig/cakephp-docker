@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-docker-compose exec --user www-data apache /var/www/html/bin/cake $@
+docker-compose exec apache /var/www/html/bin/cake $@
