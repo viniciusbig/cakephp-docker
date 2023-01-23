@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+# if [ -z "$1" ]
+#   then
+#     docker-compose exec --user www-data apache composer $@
+# else
+#     docker-compose exec --user $@ apache bash
+#     docker-compose exec --user $@ apache composer $2
+# fi
+
+docker-compose exec apache composer $@
