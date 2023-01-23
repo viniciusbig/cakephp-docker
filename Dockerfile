@@ -98,7 +98,6 @@ RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli
 # 	https://github.com/hirak/prestissimo
 
 RUN	curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin/ --filename=composer
-RUN composer global require hirak/prestissimo
 
 
 # Install Laravel
@@ -159,7 +158,7 @@ RUN a2ensite cake.conf
 # Fix permissions and enable apache modules
 RUN chmod 777 -Rf /var/www /var/www/.* \
 	&& chown -Rf www-data:www-data /var/www /var/www/.* \
-	&& chown -Rf www-data:www-data ~/.composer/ ~/.composer/.* \
+	# && chown -Rf www-data:www-data ~/.composer/ ~/.composer/.* \
 	&& usermod -u 1000 www-data \
 	&& a2enmod rewrite \
 	&& a2enmod headers

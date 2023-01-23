@@ -16,6 +16,7 @@ services:
       - ${PROJECT_ROOT}:/var/www/html:rw,delegated
       - ~/.composer:/var/www/.composer
       - ~/.npm:/var/www/.npm
+      - ~/.npmrc:/root/.npmrc
       - ~/.ssh/id_rsa:/root/.ssh/id_rsa
       # - ~/.nvm:/var/www/.nvm
     environment:
