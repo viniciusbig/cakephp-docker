@@ -1,8 +1,12 @@
 version: '3'
+
 services:
   apache:
-    image: viniciusbig/cakephp3:v1
-    # build: .
+    # You can choose between build the image by yourself or use
+    # the image already builted. Just comment one line and uncomment the other
+
+    # image: viniciusbig/cakephp3:v1
+    build: .
     env_file: .env
     ports:
       - "${APACHE_PORT}:80"
@@ -41,4 +45,3 @@ services:
     ports:
       - ${MAILHOG_SMTP_PORT}:1025
       - ${MAILHOG_HTTP_PORT}:8025
-

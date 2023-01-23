@@ -1,4 +1,6 @@
-FROM php:7.2-apache
+FROM php:7.3-apache
+
+# This image also works with php:7.2-apache too
 
 # Install System Dependencies
 
@@ -16,7 +18,7 @@ RUN apt-get update \
 	libedit2 \
 	libxslt1-dev \
 	apt-utils \
-	mysql-client \
+	mariadb-client \
 	git \
 	vim \
 	nano \
@@ -32,6 +34,7 @@ RUN apt-get update \
 	wkhtmltopdf \
 	&& apt-get clean
 
+
 # Install Cake Dependencies
 
 RUN docker-php-ext-configure \
@@ -45,8 +48,15 @@ RUN docker-php-ext-configure \
   	gd \
   	bcmath \
   	soap \
-  	xsl \
-  	zip
+  	xsl
+
+
+# Install zip and zip php extension
+# https://stackoverflow.com/questions/53772780/how-to-reinstall-the-libzip-distribution-when-build-lumen-in-docker?rq=1
+RUN apt-get install -y zip libzip-dev \
+  && docker-php-ext-configure zip --with-libzip \
+  && docker-php-ext-install zip
+
 
 # Install oAuth
 
@@ -66,17 +76,20 @@ RUN apt-get update \
 # 	https://github.com/creationix/nvm#installation
 
 RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - \
-  	&& apt-get install -y nodejs build-essential \
-    && curl https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | sh \
+  	&& apt-get install -y nodejs npm build-essential \
+    # && curl https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | sh \
+    && curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash \
     && npm i -g grunt-cli yarn gulp-cli
 
 
 # Install WP-Cli
+
 RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
 	&& php wp-cli.phar --info \
 	&& chmod +x wp-cli.phar \
 	&& mv wp-cli.phar /usr/local/bin/wp \
 	&& wp --info
+
 
 # Install Composer
 # ---------------------------------------------------------------
@@ -131,7 +144,7 @@ ADD .docker/config/custom-xdebug.ini /usr/local/etc/php/conf.d/custom-xdebug.ini
 COPY .docker/bin/* /usr/local/bin/
 COPY .docker/users/* /var/www/
 RUN chmod +x /usr/local/bin/*
-#  Enable site Apache
+# Enable site Apache
 # RUN ln -s /etc/apache2/sites-available/cake.conf /etc/apache2/sites-enabled/cake.conf
 RUN a2ensite cake.conf
 
