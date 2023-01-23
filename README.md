@@ -1,15 +1,12 @@
-![Cakephp](https://cakephp.org/v2/img/logos/CakePHP_Logo.svg)
+<p align="center">
+  <a href="https://cakephp.org/" target="_blank" >
+    <img alt="CakePHP" src="https://cakephp.org/v2/img/logos/CakePHP_Logo.svg" width="400" />
+  </a>
+</p>
 
 #  Cakephp 3 Docker to Development
 
 ### Apache 2.4 + PHP 7.2 + OPCache + MariaDB + XDebug
-
-[![Build Status](https://travis-ci.org/clean-docker/Magento2.svg?branch=master)](https://travis-ci.org/clean-docker/Magento2)
-[![Docker Build](https://img.shields.io/docker/build/rafaelcgstz/magento2.svg)](https://hub.docker.com/r/rafaelcgstz/magento2/)
-[![Docker Pulls](https://img.shields.io/docker/pulls/rafaelcgstz/magento2.svg)](https://hub.docker.com/r/rafaelcgstz/magento2/)
-[![Docker Starts](https://img.shields.io/docker/stars/rafaelcgstz/magento2.svg)](https://hub.docker.com/r/rafaelcgstz/magento2/)
-[![Build Status](https://images.microbadger.com/badges/image/rafaelcgstz/magento2.svg)](https://microbadger.com/images/rafaelcgstz/magento2)
-[![Releases](https://img.shields.io/github/release/clean-docker/Magento2.svg)](https://github.com/clean-docker/Magento2/releases)
 
 ### Requirements
 
@@ -30,7 +27,7 @@ Install [Docker](https://docs.docker.com/engine/installation/linux/docker-ce/ubu
 Execute in your terminal, change the *MYCAKE3* to use the name of your project:
 
 ```
-curl -s https://raw.githubusercontent.com/clean-docker/Magento2/master/init | bash -s MYCAKE3 clone
+curl -s https://raw.githubusercontent.com/viniciusbig/cakephp-docker/master/init | bash -s MYCAKE3 clone
 ```
 
 If you want to install a fresh Cakephp 3, use like that:
@@ -45,6 +42,8 @@ install-cake
 You can specify a subfolder to install Cake, just add a new parameter (e.g. `install-cake my_app`).
 
 ### Tips
+
+This repo uses a pre-compiled machine hosted in [Docker Hub](https://hub.docker.com/r/viniciusbig/cakephp3/). But you can easly make your changes in `Dockerfile` and `docker-compose.yml` to compile a different version of this image.
 
 >You can customize port numbers and database credentials, editing `.env` file.
 
