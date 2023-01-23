@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+if [ $@ ]; then
+  composer self-update && composer create-project --prefer-dist laravel/laravel $1
+  cd $1
+else
+  composer self-update && composer create-project --prefer-dist laravel/laravel .
+fi
+
+echo "
+===================== 🚀 Done 🚀 ===================
+
+      Laravel Installed successfully!
+
+      🌎 Web server: http://localhost/
+
+===================== 🚀 Done 🚀 ==================="
